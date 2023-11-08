@@ -11,3 +11,11 @@ terraform {
 provider "azurerm" {
   features {}
 }
+
+resource "azurerm_resource_group" "rg_main" {
+  name     = var.resource_group
+  location = var.location
+  tags = {
+    environment = "DevOps Project"
+  }
+}
