@@ -1,0 +1,11 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-nginx
+  namespace: flask-app
+spec:
+  defaultBackend:
+    service:
+      name: flask-app
+      port:
+        number: 5000

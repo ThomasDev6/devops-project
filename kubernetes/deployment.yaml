@@ -1,0 +1,55 @@
+# REDIS
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: flask-app
+  name: flask-redis-deployment
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: flask-app-redis
+          image: redis
+          ports:
+            - containerPort: 6379
+          volumeMounts:
+            - name: redis-storage
+              mountPath: /data/redis
+      volumes:
+        - name: redis-storage
+          persistentVolumeClaim:
+            claimName: redis-pvc
+
+---
+# Flask App
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-deployment
+  namespace: flask-app
+  labels:
+    app: flask-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+          app: flask-app
+    spec:
+      containers:
+        - name: flask-app
+          image: acr067sdevtestdevops.azurecr.io/flask-app:latest
+          ports:
+            - containerPort: 8000
