@@ -17,7 +17,7 @@ spec:
         app: redis
     spec:
       containers:
-        - name: flask-app-redis
+        - name: redis
           image: redis
           ports:
             - containerPort: 6379
@@ -37,19 +37,19 @@ metadata:
   name: flask-app-deployment
   namespace: flask-app
   labels:
-    app: flask-app
+    app: flask
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: flask-app
+      app: flask
   template:
     metadata:
       labels:
-          app: flask-app
+          app: flask
     spec:
       containers:
-        - name: flask-app
-          image: acr067sdevtestdevops.azurecr.io/flask-app:latest
+        - name: flask
+          image: acrdevecijallu.azurecr.io/flask-app:latest
           ports:
             - containerPort: 8000

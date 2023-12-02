@@ -4,8 +4,9 @@ metadata:
   name: ingress-nginx
   namespace: flask-app
 spec:
+  ingressClassName: nginx
   defaultBackend:
     service:
-      name: flask-app
+      name: flask
       port:
         number: 5000

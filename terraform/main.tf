@@ -15,7 +15,7 @@ resource "azurerm_resource_group" "rg_main" {
   name     = var.resource_group
   location = var.location
   tags = {
-    environment = "test devops proj"
+    environment = "esgi devops project"
   }
 }
 
@@ -26,7 +26,7 @@ resource "azurerm_container_registry" "acr" {
   sku                    = "Standard"
   admin_enabled          = true
   tags = {
-    environment = "test devops proj"
+    environment = "esgi devops project"
   }
 }
 
@@ -34,7 +34,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   name                = var.cluster_kubernetes_name
   resource_group_name = azurerm_resource_group.rg_main.name
   location            = azurerm_resource_group.rg_main.location
-  dns_prefix = "test-devops-proj"
+  dns_prefix = "testdevopsproj"
 
   default_node_pool {
     name       = "default"
@@ -47,19 +47,21 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   }
 
   tags = {
-    environment = "test devops proj"
+    environment = "esgi devops project"
   }
 
 }
 
 resource "azurerm_public_ip" "public_ip_address" {
   name                = var.public_ip_name
-  resource_group_name = azurerm_resource_group.rg_main.name
+  // https://stackoverflow.com/questions/75247192/whats-the-correct-way-to-setup-aks-cluster-static-ip-load-balancer-and-ingress
+  resource_group_name = azurerm_kubernetes_cluster.k8s.node_resource_group
   location            = azurerm_resource_group.rg_main.location
   allocation_method   = "Static"
-
+  // https://stackoverflow.com/questions/64740298/how-to-expose-an-azure-kubernetes-cluster-with-a-public-ip-address-using-terrafo
+  sku =  "Standard"
   tags = {
-    environment = "test devops proj"
+    environment = "esgi devops project"
   }
 }
 
