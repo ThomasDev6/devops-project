@@ -2,7 +2,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "=3.0.0"
+      version = "=3.83.0"
     }
   }
 }
@@ -77,5 +77,5 @@ resource "azurerm_role_assignment" "acr_pull" {
 resource "azurerm_role_assignment" "acr_push" {
   scope                = azurerm_container_registry.acr.id
   role_definition_name = "AcrPush"
-  principal_id         = azurerm_kubernetes_cluster.k8s.kubelet_identity[0].object_id
+  principal_id         = var.user_object_id
 }

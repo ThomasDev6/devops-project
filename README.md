@@ -10,7 +10,7 @@
 
 ### Etape 1 : Partie Terraform
 
-- Entrer dans le dossier <span style="color:cyan">terraform</span>
+- Entrer dans le dossier terraform
 
 ```bash
 cd terraform
@@ -27,23 +27,30 @@ az login
 terraform init 
 ```
 
-- Puis, il faut vérifier que tout est correcte
+- Ensuite, on récupère l'ID de l'utilisateur
 
 ```bash
-terraform plan
+az ad signed-in-user show --query id -o tsv
 ```
+Il faut copier la sortie.
 
-- Enfin, il faut déployer l'infrastructure
+- Puis, il faut vérifier que tout est correcte en indiquant la valeur copiée au préalable pour user_object_id
 
 ```bash
-terraform apply
+terraform plan -var "user_object_id=<ID>"
 ```
-Entrez<span style="color:red"> yes </span>pour confirmer l'apply, vous devrez attendre 2 à 5 minutres pour que l'infrastructure soit déployée.
+
+- Enfin, il faut déployer l'infrastructure en indiquant la valeur copiée au préalable pour user_object_id
+
+```bash
+terraform apply -var "user_object_id=<ID>"
+```
+Entrez yes pour confirmer l'apply, vous devrez attendre 2 à 5 minutres pour que l'infrastructure soit déployée.
 
 
-### Etape 2 : Partie Docker - <span style="color:green">Assurez-vous que vous avez lancé Docker au préalable</span>
+### Etape 2 : Partie Docker - Assurez-vous que vous avez lancé Docker au préalable
 
-- Entrer dans le dossier <span style="color:cyan">flask-app</span>
+- Entrer dans le dossier flask-app
 
 ```bash
 cd ../flask-app
@@ -54,7 +61,7 @@ cd ../flask-app
 ```bash
 az acr login --name acrdevecijallu
 ```
-Vous devrez voir <span style="color:green">Login Succeeded</span>
+Vous devrez voir Login Succeeded
 
 - Puis, il faut créer l'image de notre application à partir du Dockerfile
 
@@ -70,7 +77,7 @@ docker push acrdevecijallu.azurecr.io/flask-app:latest
 
 ### Etape 3 : Partie Kubernetes
 
-- Naviguer à la racine du projet <span style="color:cyan">(devops-project)</span>
+- Naviguer à la racine du projet (devops-project)
 
 ```bash
 cd ../
@@ -137,12 +144,12 @@ kubectl get all -n flask-app
 curl <PUBLIC-IP>
 ```
 
-Le résultat : <span style="color:green">This webpage has been viewed \<X> time(s)</span>
+Le résultat : This webpage has been viewed \<X> time(s)
 
 
 ### Etape 5 : Partie Nettoyage
 
-- Toujours dans le dossier <span style="color:cyan">devops-project</span>, on va supprimer premièrement l'ingress controller
+- Toujours dans le dossier devops-project, on va supprimer premièrement l'ingress controller
 
 ```bash
 helm uninstall ingress-nginx -n flask-app
@@ -154,9 +161,9 @@ helm uninstall ingress-nginx -n flask-app
 kubectl delete -f kubernetes
 ```
 
-- Puis, on va supprimer l'infrastructure
+- Puis, on va supprimer l'infrastructure où on va indiquer la valeur copiée au préalable pour user_object_id
 
 ```bash
 cd terraform
-terraform destroy
+terraform destroy -var "user_object_id=<ID>"
 ```
